@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
     private List<Section> sections = new List<Section>();
     [SerializeField]
     private GameObject killPrefab, finishPrefab;
+    [SerializeField]
+    private Transform spawnLeft,SpawnRight, player;
 
 
     private bool timerRunning;
@@ -34,9 +36,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        currentTime = 5;
-        text.text = currentTime + "\nScore:" + score;
-        timerRunning = true;
+        StartNewLevel();
     }
 
     private void FixedUpdate()
@@ -71,6 +71,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void StartNewLevel()
+    {
+        
+        player.transform.position = Random.Range(0,10) >= 5? spawnLeft.transform.position : SpawnRight.transform.position;
+        currentTime = 5;
+        text.text = currentTime + "\nScore:" + score;
+        timerRunning = true;
+        GenerateLevel(0.5f, 9);
+    }
+
     private void GenerateLevel(float chance, int maxHoles)
     {
         ResetLevel();
@@ -100,12 +110,13 @@ public class GameManager : MonoBehaviour
         {
             GameObject bottom = Instantiate(i == correctHole ? finishPrefab : killPrefab);
             bottom.transform.position = openHoles[i].bottomPoint.position;
-            bottom.AddComponent<ObjectCollision>().isFinish = i == correctHole;
+            ObjectCollision oc = bottom.AddComponent<ObjectCollision>();
+            oc.isFinish = i == correctHole;
+            oc.gm = this;
             finishes.Add(bottom);
         }
         
     }
-
     private void ResetLevel()
     {
         foreach (Section section in sections)
