@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private float currentTime;
 
+    private int currentHoles;
+    private float chance = 1;
+
     [Header("Settings")]
     [SerializeField]
     private int collectableScore;
@@ -74,11 +77,13 @@ public class GameManager : MonoBehaviour
     public void StartNewLevel()
     {
         
-        player.transform.position = Random.Range(0,10) >= 5? spawnLeft.transform.position : SpawnRight.transform.position;
+        player.transform.position = Random.Range(0,10) >= 5 ? spawnLeft.transform.position : SpawnRight.transform.position;
         currentTime = 5;
         text.text = currentTime + "\nScore:" + score;
         timerRunning = true;
-        GenerateLevel(0.5f, 9);
+        currentHoles += 1;
+        chance -= 0.1f;
+        GenerateLevel(chance, currentHoles);
     }
 
     private void GenerateLevel(float chance, int maxHoles)
@@ -94,7 +99,8 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < sections.Count; i++)
         {
             if (i > 0 && amountofHoles <= maxHoles && sections[i - 1].go.activeInHierarchy && Random.Range(0,10) >= chance * 10 ||
-                i == 0 && amountofHoles <= maxHoles && Random.Range(0, 10) >= chance * 10)
+                i == 0 && amountofHoles <= maxHoles && Random.Range(0, 10) >= chance * 10 ||
+                i == sections.Count - 1 && openHoles.Count == 0)
             {
                 sections[i].go.SetActive(false);
                 amountofHoles++;
