@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
 
     private int currentHoles;
     private float chance = 1;
+    private int coinCount;
 
     [Header("Settings")]
     [SerializeField]
@@ -76,15 +77,19 @@ public class GameManager : MonoBehaviour
         currentTime = 5;
         text.text = currentTime + "\nScore:" + score;
         timerRunning = true;
+
+        //Changing the variables for the next level
         currentHoles += 1;
         chance -= 0.1f;
-        GenerateLevel(chance, currentHoles,0.5f,5);
+        coinCount += 1;
+
+        GenerateLevel(chance, currentHoles,coinCount);
     }
 
-    private void GenerateLevel(float chance, int maxHoles, float coinsChance, int maxCoins)
+    private void GenerateLevel(float chance, int maxHoles, int maxCoins)
     {
         ResetLevel();
-        GenerateCoins(coinsChance, maxCoins);
+        GenerateCoins(maxCoins);
         if (chance > 1)
             chance = chance / 10f;
 
@@ -118,20 +123,16 @@ public class GameManager : MonoBehaviour
         }
         
     }
-    private void GenerateCoins(float coinsChance, int maxCoins)
+    private void GenerateCoins(int maxCoins)
     {
-        int coinsCount = 0;
-        coins = new List<GameObject>();
-        foreach (Transform spawn in coinSpawns)
+        int coinsCount = Random.Range(0,maxCoins);
+        coins = new List<GameObject>(coinCount);
+        for (int i = 0; i < coinsCount; i++)
         {
-            if (coinsCount <= maxCoins && Random.Range(0, 10) >= coinsChance)
-            {
-                GameObject lastCoin = Instantiate(coinPrefab);
-                lastCoin.GetComponent<Collectable>().gm = this;
-                lastCoin.transform.position = spawn.position;
-                coins.Add(lastCoin);
-                coinsCount++;
-            }
+            GameObject lastCoin = Instantiate(coinPrefab);
+            lastCoin.GetComponent<Collectable>().gm = this;
+            lastCoin.transform.position = coinSpawns[Random.Range(0,coinSpawns.Length - 1)].position;
+            coins.Add(lastCoin);
         }
     }
     private void ResetLevel()
