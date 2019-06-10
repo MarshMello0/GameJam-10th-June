@@ -27,13 +27,16 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private List<Section> sections = new List<Section>();
     [SerializeField]
-    private GameObject killPrefab, finishPrefab;
+    private Transform[] coinSpawns;
+    [SerializeField]
+    private GameObject killPrefab, finishPrefab, coinPrefab;
     [SerializeField]
     private Transform spawnLeft,SpawnRight, player;
 
 
     private bool timerRunning;
     private List<GameObject> finishes;
+    private List<GameObject> coins = new List<GameObject>();
     [SerializeField]
     private bool disableTimer;
 
@@ -66,14 +69,6 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    void OnGUI()
-    {
-        if (GUI.Button(new Rect(0,0,100,100),"Generate"))
-        {
-            GenerateLevel(0.5f, 5);
-        }
-    }
-
     public void StartNewLevel()
     {
         
@@ -83,13 +78,13 @@ public class GameManager : MonoBehaviour
         timerRunning = true;
         currentHoles += 1;
         chance -= 0.1f;
-        GenerateLevel(chance, currentHoles);
+        GenerateLevel(chance, currentHoles,0.5f,5);
     }
 
-    private void GenerateLevel(float chance, int maxHoles)
+    private void GenerateLevel(float chance, int maxHoles, float coinsChance, int maxCoins)
     {
         ResetLevel();
-
+        GenerateCoins(coinsChance, maxCoins);
         if (chance > 1)
             chance = chance / 10f;
 
@@ -123,6 +118,22 @@ public class GameManager : MonoBehaviour
         }
         
     }
+    private void GenerateCoins(float coinsChance, int maxCoins)
+    {
+        int coinsCount = 0;
+        coins = new List<GameObject>();
+        foreach (Transform spawn in coinSpawns)
+        {
+            if (coinsCount <= maxCoins && Random.Range(0, 10) >= coinsChance)
+            {
+                GameObject lastCoin = Instantiate(coinPrefab);
+                lastCoin.GetComponent<Collectable>().gm = this;
+                lastCoin.transform.position = spawn.position;
+                coins.Add(lastCoin);
+                coinsCount++;
+            }
+        }
+    }
     private void ResetLevel()
     {
         foreach (Section section in sections)
@@ -137,6 +148,11 @@ public class GameManager : MonoBehaviour
             {
                 Destroy(finishes[i]);
             }
+        }
+
+        for (int i = 0; i < coins.Count; i++)
+        {
+            Destroy(coins[i]);
         }
 
     }

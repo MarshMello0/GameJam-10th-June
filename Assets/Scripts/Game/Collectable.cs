@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class Collectable : MonoBehaviour
 {
-    [SerializeField]
-    private GameManager gm;
+    public GameManager gm;
 
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (col.CompareTag("Player"))
         {
             gm.AddScore();
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 }
