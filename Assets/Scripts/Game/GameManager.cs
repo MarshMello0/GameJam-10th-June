@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI text;
 
     private bool timerRunning;
+    [SerializeField]
+    private bool disableTimer;
 
     private void Start()
     {
@@ -32,7 +34,7 @@ public class GameManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (timerRunning)
+        if (timerRunning && !disableTimer)
         {
             currentTime -= Time.fixedDeltaTime;
             if (currentTime <= 0)
