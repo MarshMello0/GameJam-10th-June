@@ -15,7 +15,6 @@ public class GameManager : MonoBehaviour
     private float currentTime;
 
     private int currentHoles;
-    private float chance = 1;
     private int coinCount;
 
     [Header("Settings")]
@@ -80,32 +79,24 @@ public class GameManager : MonoBehaviour
 
         //Changing the variables for the next level
         currentHoles += 1;
-        chance -= 0.1f;
         coinCount += 1;
 
-        GenerateLevel(chance, currentHoles,coinCount);
+        GenerateLevel(currentHoles,coinCount);
     }
 
-    private void GenerateLevel(float chance, int maxHoles, int maxCoins)
+    private void GenerateLevel(int maxHoles, int maxCoins)
     {
         ResetLevel();
         GenerateCoins(maxCoins);
-        if (chance > 1)
-            chance = chance / 10f;
 
-        int amountofHoles = 0;
-        List<Section> openHoles = new List<Section>();
+        int amountofHoles = Random.Range(0,maxHoles);
+        List<Section> openHoles = new List<Section>(amountofHoles);
 
-        for (int i = 0; i < sections.Count; i++)
+        for (int i = 0; i <= amountofHoles; i++)
         {
-            if (i > 0 && amountofHoles <= maxHoles && sections[i - 1].go.activeInHierarchy && Random.Range(0,10) >= chance * 10 ||
-                i == 0 && amountofHoles <= maxHoles && Random.Range(0, 10) >= chance * 10 ||
-                i == sections.Count - 1 && openHoles.Count == 0)
-            {
-                sections[i].go.SetActive(false);
-                amountofHoles++;
-                openHoles.Add(sections[i]);
-            }
+            int sectionIndex = Random.Range(0, sections.Count - 1);
+            sections[sectionIndex].go.SetActive(false);
+            openHoles.Add(sections[sectionIndex]);
         }
 
         //This is the correct whole which has the finish flag
@@ -127,7 +118,7 @@ public class GameManager : MonoBehaviour
     {
         int coinsCount = Random.Range(0,maxCoins);
         coins = new List<GameObject>(coinCount);
-        for (int i = 0; i < coinsCount; i++)
+        for (int i = 0; i <= coinsCount; i++)
         {
             GameObject lastCoin = Instantiate(coinPrefab);
             lastCoin.GetComponent<Collectable>().gm = this;
