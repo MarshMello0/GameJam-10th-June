@@ -94,9 +94,16 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i <= amountofHoles; i++)
         {
-            int sectionIndex = Random.Range(0, sections.Count - 1);
-            sections[sectionIndex].go.SetActive(false);
-            openHoles.Add(sections[sectionIndex]);
+            int sectionIndex = Random.Range(1, sections.Count - 2);
+            while (!sections[sectionIndex - 1].go.activeInHierarchy || !sections[sectionIndex + 1].go.activeInHierarchy || !sections[sectionIndex].go.activeInHierarchy)
+            {
+                sectionIndex = Random.Range(0, sections.Count - 1);
+            }
+
+            Debug.Log(sectionIndex);
+            Section lastSection = sections[sectionIndex];
+            lastSection.go.SetActive(false);
+            openHoles.Add(lastSection);
         }
 
         //This is the correct whole which has the finish flag
