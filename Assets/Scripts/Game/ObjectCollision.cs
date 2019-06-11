@@ -18,7 +18,7 @@ public class ObjectCollision : MonoBehaviour
             }
             else
             {
-                SceneManager.LoadScene(0);
+                gm.KillPlayer();
             }
         }
     }

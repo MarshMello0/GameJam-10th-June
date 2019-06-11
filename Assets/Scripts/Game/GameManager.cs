@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using System;
 using Random = UnityEngine.Random;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -29,14 +30,18 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Transform[] coinSpawns;
     [SerializeField]
-    private GameObject killPrefab, finishPrefab, coinPrefab;
+    private GameObject killPrefab, finishPrefab, coinPrefab, paintingPrefab;
     [SerializeField]
     private Transform spawnLeft,SpawnRight, player;
+    [SerializeField] private Slider timerSlider;
+    [SerializeField] private PlayerController playerController;
+    [SerializeField] private DeathManager deathManager;
 
 
     private bool timerRunning;
     private List<GameObject> finishes;
     private List<GameObject> coins = new List<GameObject>();
+    private List<GameObject> paintings = new List<GameObject>(3);
     [SerializeField]
     private bool disableTimer;
 
@@ -55,7 +60,9 @@ public class GameManager : MonoBehaviour
                 KillPlayer();
                 return;
             }
-            text.text = Math.Round(currentTime,2) + "\nScore:" + score;
+
+            timerSlider.value = Mathf.Lerp(1,0 , currentTime / 5);
+            text.text = "\nScore:" + score;
         }
     }
 
@@ -66,7 +73,11 @@ public class GameManager : MonoBehaviour
 
     public void KillPlayer()
     {
-        SceneManager.LoadScene(0);
+        //SceneManager.LoadScene(0);
+        ShowGaps();
+        timerRunning = false;
+        playerController.isDead = true;
+        deathManager.PlayDeath();
     }
 
     public void StartNewLevel()
@@ -83,11 +94,11 @@ public class GameManager : MonoBehaviour
 
         GenerateLevel(currentHoles,coinCount);
     }
-
     private void GenerateLevel(int maxHoles, int maxCoins)
     {
         ResetLevel();
         GenerateCoins(maxCoins);
+        GeneratePaintings(3);
 
         int amountofHoles = Random.Range(0,maxHoles);
         List<Section> openHoles = new List<Section>(amountofHoles);
@@ -95,14 +106,23 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i <= amountofHoles; i++)
         {
             int sectionIndex = Random.Range(1, sections.Count - 2);
+            int whileCount = 0;
             while (!sections[sectionIndex - 1].go.activeInHierarchy || !sections[sectionIndex + 1].go.activeInHierarchy || !sections[sectionIndex].go.activeInHierarchy)
             {
-                sectionIndex = Random.Range(0, sections.Count - 1);
+                sectionIndex = Random.Range(1, sections.Count - 2);
+                //This count is to stop it endlessly going
+                whileCount++;
+                if (whileCount > sections.Count)
+                    break;
             }
 
-            Debug.Log(sectionIndex);
+            if (whileCount > sections.Count)
+                break;
+            
+            
             Section lastSection = sections[sectionIndex];
             lastSection.go.SetActive(false);
+            lastSection.hasFinish = true;
             openHoles.Add(lastSection);
         }
 
@@ -119,7 +139,9 @@ public class GameManager : MonoBehaviour
             oc.gm = this;
             finishes.Add(bottom);
         }
-        
+
+        StartCoroutine(HideGaps());
+
     }
     private void GenerateCoins(int maxCoins)
     {
@@ -133,11 +155,54 @@ public class GameManager : MonoBehaviour
             coins.Add(lastCoin);
         }
     }
+    private void GeneratePaintings(int amount)
+    {
+        paintings = new List<GameObject>(amount);
+        for (int i = 0; i <= amount; i++)
+        {
+            GameObject lastPainting = Instantiate(paintingPrefab);
+            lastPainting.transform.position = coinSpawns[Random.Range(0, coinSpawns.Length - 1)].position;
+            paintings.Add(lastPainting);
+        }
+    }
+    IEnumerator HideGaps()
+    {
+        yield return new WaitForSeconds(0.5f);
+        foreach (Section section in sections)
+        {
+            if (!section.go.activeInHierarchy)
+            {
+                section.go.SetActive(true);
+                section.col.enabled = false;
+            }
+        }
+
+        foreach (GameObject finish in finishes)
+        {
+            finish.transform.GetChild(0).gameObject.SetActive(false);
+        }
+    }
+    private void ShowGaps()
+    {
+        foreach (Section section in sections)
+        {
+            if (section.hasFinish)
+            {
+                section.go.SetActive(false);
+            }
+        }
+        foreach (GameObject finish in finishes)
+        {
+            finish.transform.GetChild(0).gameObject.SetActive(true);
+        }
+    }
     private void ResetLevel()
     {
         foreach (Section section in sections)
         {
             section.go.SetActive(true);
+            section.col.enabled = true;
+            section.hasFinish = false;
         }
 
 
@@ -154,6 +219,11 @@ public class GameManager : MonoBehaviour
             Destroy(coins[i]);
         }
 
+        for (int i = 0; i < paintings.Count; i++)
+        {
+            Destroy(paintings[i]);
+        }
+
     }
 }
 [Serializable]
@@ -162,4 +232,5 @@ public class Section
     public GameObject go;
     public BoxCollider2D col;
     public Transform bottomPoint;
+    public bool hasFinish;
 }

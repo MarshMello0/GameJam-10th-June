@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float groundCheckDistance;
 
+    [HideInInspector] public bool isDead;
+
 
     private float currentSpeed;
     private bool isGrounded;
@@ -28,10 +30,9 @@ public class PlayerController : MonoBehaviour
 
 
     [Header("Objects")]
-    [SerializeField]
-    private Transform groundCheck;
-    [SerializeField]
-    private Rigidbody2D rigidbody2D;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private Rigidbody2D rigidbody2D;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     private void Start()
     {
@@ -40,7 +41,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        Movement();
+        if (!isDead)
+            Movement();
     }
 
     private void Movement()
@@ -70,13 +72,16 @@ public class PlayerController : MonoBehaviour
         newVelocity.x = Mathf.Lerp(newVelocity.x, 0, breakingSpeed);
 
         //Left and Right Movement
+        
         if (Input.GetKey(kLeft))
         {
             newVelocity.x += Vector2.left.x * currentSpeed;
+            spriteRenderer.flipX = true;
         }
         else if (Input.GetKey(kRight))
         {
             newVelocity.x -= Vector2.left.x * currentSpeed;
+            spriteRenderer.flipX = false;
         }
 
         rigidbody2D.velocity = newVelocity;
