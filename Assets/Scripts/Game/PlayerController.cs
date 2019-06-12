@@ -49,7 +49,6 @@ public class PlayerController : MonoBehaviour
     {
         newVelocity = rigidbody2D.velocity;
         isGrounded = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance);
-        Debug.DrawLine(groundCheck.position, new Vector2(groundCheck.position.x, groundCheck.position.y - groundCheckDistance), isGrounded ? Color.green : Color.red);
         //Jumping
         if (isGrounded && Input.GetKeyDown(kJump))
         {

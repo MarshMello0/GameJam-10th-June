@@ -7,7 +7,6 @@ public class ObjectCollision : MonoBehaviour
 {
     public bool isFinish;
     public GameManager gm;
-
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (col.CompareTag("Player"))
@@ -18,7 +17,7 @@ public class ObjectCollision : MonoBehaviour
             }
             else
             {
-                gm.KillPlayer();
+                gm.KillPlayer(false);
             }
         }
     }

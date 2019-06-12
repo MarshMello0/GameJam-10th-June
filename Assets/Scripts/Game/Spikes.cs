@@ -4,16 +4,13 @@ using UnityEngine;
 
 public class Spikes : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    [SerializeField] private GameObject deathParticle;
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            DeathEffect(other.transform.position);
+            Instantiate(deathParticle, other.transform.position, Quaternion.Euler(0, 0, 0));
+            other.gameObject.SetActive(false);
         }
-    }
-
-    private void DeathEffect(Vector3 position)
-    {
-        
     }
 }

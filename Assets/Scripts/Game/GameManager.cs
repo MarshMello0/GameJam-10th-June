@@ -5,7 +5,8 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using System;
 using Random = UnityEngine.Random;
-using UnityEngine.UI;
+using Pixeye.Unity;
+using Slider = UnityEngine.UI.Slider;
 
 public class GameManager : MonoBehaviour
 {
@@ -33,10 +34,21 @@ public class GameManager : MonoBehaviour
     private GameObject killPrefab, finishPrefab, coinPrefab, paintingPrefab;
     [SerializeField]
     private Transform spawnLeft,SpawnRight, player;
-    [SerializeField] private Slider timerSlider;
-    [SerializeField] private PlayerController playerController;
-    [SerializeField] private DeathManager deathManager;
+    [SerializeField] 
+    private Slider timerSlider;
+    [SerializeField] 
+    private PlayerController playerController;
+    [SerializeField] 
+    private Animator animator;
+    [SerializeField] 
+    private GameObject deathParticle;
 
+    [Foldout("Game Over")] [SerializeField] 
+    private GameObject gameOverText;
+    [Foldout("Game Over")] [SerializeField]
+    private TextMeshProUGUI finalScoreText;
+    [Foldout("Game Over")] [SerializeField]
+    private TextMeshProUGUI finalHighScoreText;
 
     private bool timerRunning;
     private List<GameObject> finishes;
@@ -49,7 +61,6 @@ public class GameManager : MonoBehaviour
     {
         StartNewLevel();
     }
-
     private void FixedUpdate()
     {
         if (timerRunning && !disableTimer)
@@ -57,7 +68,7 @@ public class GameManager : MonoBehaviour
             currentTime -= Time.fixedDeltaTime;
             if (currentTime <= 0)
             {
-                KillPlayer();
+                KillPlayer(true);
                 return;
             }
 
@@ -65,21 +76,26 @@ public class GameManager : MonoBehaviour
             text.text = "\nScore:" + score;
         }
     }
-
     public void AddScore()
     {
         score += collectableScore;
     }
-
-    public void KillPlayer()
+    public void KillPlayer(bool NoTimeLeft)
     {
-        //SceneManager.LoadScene(0);
         ShowGaps();
         timerRunning = false;
         playerController.isDead = true;
-        deathManager.PlayDeath();
+        
+        if (NoTimeLeft)
+            animator.Play("Drop");
+        else
+        {
+            Instantiate(deathParticle, player.position, Quaternion.Euler(0, 0, 0));
+            player.gameObject.SetActive(false);
+        } 
+        
+        GameOver();
     }
-
     public void StartNewLevel()
     {
         
@@ -198,6 +214,7 @@ public class GameManager : MonoBehaviour
     }
     private void ResetLevel()
     {
+        score++;
         foreach (Section section in sections)
         {
             section.go.SetActive(true);
@@ -223,7 +240,30 @@ public class GameManager : MonoBehaviour
         {
             Destroy(paintings[i]);
         }
-
+    }
+    private void GameOver()
+    {
+        int highscore = ScoreManager.highScore;
+        if (score > highscore)
+        {
+            highscore = score;
+            ScoreManager.highScore = score;
+        }
+        gameOverText.SetActive(true);
+        finalScoreText.text = "" + score;
+        finalHighScoreText.text = "" + highscore;
+    }
+    public void Quit()
+    {
+        Application.Quit();
+    }
+    public void MainMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+    public void Replay()
+    {
+        SceneManager.LoadScene(1);
     }
 }
 [Serializable]
