@@ -10,17 +10,15 @@ using Slider = UnityEngine.UI.Slider;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("Session Info")]
-    [SerializeField]
+    [Foldout("Session Info")] [SerializeField]
     private int score;
-    [SerializeField]
+    [Foldout("Session Info")] [SerializeField]
     private float currentTime;
 
     private int currentHoles;
     private int coinCount;
 
-    [Header("Settings")]
-    [SerializeField]
+    [Foldout("Settings")] [SerializeField]
     private int collectableScore;
 
     [Header("Objects")]
@@ -49,6 +47,9 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI finalScoreText;
     [Foldout("Game Over")] [SerializeField]
     private TextMeshProUGUI finalHighScoreText;
+    [Foldout("Game Over")] [SerializeField]
+    private NumberManager numberManager;
+    
 
     private bool timerRunning;
     private List<GameObject> finishes;

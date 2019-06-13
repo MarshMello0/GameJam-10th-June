@@ -22,6 +22,7 @@
             <e p="Collectable.cs" t="Include" />
             <e p="DeathManager.cs" t="Include" />
             <e p="GameManager.cs" t="Include" />
+            <e p="NumberManager.cs" t="Include" />
             <e p="ObjectCollision.cs" t="Include" />
             <e p="PlayerController.cs" t="Include" />
             <e p="RandomPainting.cs" t="Include" />

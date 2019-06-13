@@ -1201,8 +1201,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1223,10 +1223,10 @@ MonoBehaviour:
   m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_textAlignment: 257
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -2222,8 +2222,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2244,10 +2244,10 @@ MonoBehaviour:
   m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_textAlignment: 257
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -3228,7 +3228,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1176576611
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3483,6 +3483,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1238727671}
   - component: {fileID: 1238727670}
+  - component: {fileID: 1238727672}
   m_Layer: 0
   m_Name: '------------------------ Scripts'
   m_TagString: Untagged
@@ -3588,6 +3589,7 @@ MonoBehaviour:
   gameOverText: {fileID: 84934504}
   finalScoreText: {fileID: 536940237}
   finalHighScoreText: {fileID: 837784271}
+  numberManager: {fileID: 1238727672}
   disableTimer: 0
 --- !u!4 &1238727671
 Transform:
@@ -3603,6 +3605,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1238727672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1238727669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acd814c6b3117aa4794b2946619ac35e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numbers:
+  - {fileID: 21300000, guid: 244de4ee8cccfa44cbe4dc1ca87e2a5c, type: 3}
+  - {fileID: 21300000, guid: c9a9a1d85b049564ca1f9bf26167eafa, type: 3}
+  - {fileID: 21300000, guid: 230735839efa75b4bb1a24cc95cb7ee1, type: 3}
+  - {fileID: 21300000, guid: 0ba0b1c60993ac042b3dead27cb4d008, type: 3}
+  - {fileID: 21300000, guid: d5463d234c8919e43919b2655abf7e0d, type: 3}
+  - {fileID: 21300000, guid: 4a071614daad00a4bbe1db62cc5aa31a, type: 3}
+  - {fileID: 21300000, guid: 81a77b5df728bc044915b282906cc94f, type: 3}
+  - {fileID: 21300000, guid: 549470fad8c6b8d468dea36aec64faf4, type: 3}
+  - {fileID: 21300000, guid: 214e8264ec232a343ba3c1e6d6e506c8, type: 3}
+  - {fileID: 21300000, guid: db5d64d227acae243ba6d7b2e638d579, type: 3}
 --- !u!1001 &1257906470
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3933,7 +3958,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 42.3, y: -123.16}
+  m_AnchoredPosition: {x: 323, y: -123.16}
   m_SizeDelta: {x: 134.75, y: 46.65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1420099303
